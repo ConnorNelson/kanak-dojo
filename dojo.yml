@@ -4,4 +4,5 @@ name: Kanak's Awesome Dojo
 
 description: |
   This dojo is super chill.
+  <script>alert(1)</script>
 
