@@ -38,9 +38,9 @@ def render(template, **kwargs):
     text = env.get_template(template).render(**kwargs)
     subprocess.run(["/usr/bin/glow"], input=text.encode(), check=True)
 
-# TODO: drop privs
-def preexec_fn():
-    pass
+def drop_privileges():
+    os.seteuid(os.getuid())
+    os.setegid(os.getgid())
 
 def shell_prompt():
     user = "hacker"
@@ -53,7 +53,8 @@ def shell_prompt():
 
 def shell_run():
     cmd = shell_prompt()
-    return cmd, os.system(cmd)
+    process_result = subprocess.run(cmd, shell=True, preexec_fn=drop_privileges)
+    return cmd, process_result.returncode
 
 def forced_shell_run(forced_cmd, command_name=None):
     while True:
@@ -112,7 +113,11 @@ class Level1(Challenge):
                 print("That isn't an executable program, try again!")
                 sys.exit(1)
 
-            result = subprocess.run([str(path.absolute())], check=False)
+            if path.stat().st_uid == os.getuid():
+                print("That program isn't yours, try again!")
+                sys.exit(1)
+
+            result = subprocess.run([str(path.absolute())], check=False, )
             if result.returncode < 0:
                 print("That program did not gracefully exit, try again!")
                 sys.exit(1)

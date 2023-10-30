@@ -4,7 +4,7 @@ Now how do we create something that our processor can actually understand and ru
 
 We'll write our program in a human-readable language called **assembly**, which some other program (the *assembler*) knows how to convert into machine code.
 
-Take a step back, this is **super cool**: we're going to use a program that will take in our program as input to create a program as output! As it turns out, what is code and what is data is just a matter of perspective. In this context, our assembly code is data, and the machine code it produces is code. Or is it? From the perspective of the CPU, isn't that machine code just data that the CPU is going to interpret? It's all just a bunch of bits, and what those bits mean is in the eye of the beholder.
+Take a step back, this is **super cool**: we're going to use a *program* that will take in our *human-readable program* as input to create a *computer-readable program* as output! As it turns out, what is code and what is data is just a matter of perspective. In this context, our assembly code is data, and the machine code it produces is code. Or is it? From the perspective of the CPU, isn't that machine code just data that the CPU is going to interpret? It's all just a bunch of bits, and what those bits mean is in the eye of the beholder.
 
 Here is what your instruction looks like in a fully-formed assembly program:
 
