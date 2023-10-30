@@ -1,0 +1,319 @@
+#!/opt/pwn.college/python
+
+import ctypes
+import os
+import pathlib
+import pty
+import random
+import re
+import select
+import subprocess
+import sys
+import tempfile
+import termios
+
+from jinja2 import Environment, FileSystemLoader
+
+
+"""
+TODO: maybe split all these files out with a util library
+"""
+
+import readline
+
+try:
+    seed = open("/flag", "rb").read()
+except:
+    seed = 0
+random = random.Random(seed)
+
+lectures_path = pathlib.Path(__file__).parent / "lectures"
+env = Environment(loader=FileSystemLoader(lectures_path))
+
+libc = ctypes.CDLL("libc.so.6")
+pidfd_open = lambda pid, flags: libc.syscall(434, pid, flags)
+
+
+def render(template, **kwargs):
+    text = env.get_template(template).render(**kwargs)
+    subprocess.run(["/usr/bin/glow"], input=text.encode(), check=True)
+
+# TODO: drop privs
+def preexec_fn():
+    pass
+
+def shell_prompt():
+    user = "hacker"
+    hostname = os.uname().nodename
+    cwd = os.getcwd()
+    symbol = "$" if user != "root" else "#"
+    prompt = f"{user}@{hostname}:{cwd}{symbol} "
+    cmd = input(prompt)
+    return cmd
+
+def shell_run():
+    cmd = shell_prompt()
+    return cmd, os.system(cmd)
+
+def forced_shell_run(forced_cmd, command_name=None):
+    while True:
+        cmd, result = shell_run()
+        command_name = f"{command_name} command" if command_name else "command"
+        if cmd != forced_cmd:
+            print(f"Please run the {command_name} as specified, try again!")
+            continue
+        return cmd, result
+
+def interactive(cmd, interactive_prompts):
+    master, slave = pty.openpty()
+    attrs = termios.tcgetattr(slave)
+    attrs[3] = attrs[3] & ~termios.ECHO
+    termios.tcsetattr(slave, termios.TCSANOW, attrs)
+    process = subprocess.Popen(cmd,
+                                stdin=slave,
+                                stdout=slave,
+                                stderr=slave,
+                                shell=True)
+    process_stdin = open(master, "wb", buffering=0)
+    process_fd = pidfd_open(process.pid, 0)
+    full_output = ""
+    while True:
+        timeout = 5
+        ready, _, _ = select.select([process_fd, master], [], [], timeout)
+        if process_fd in ready:
+            break
+        if ready:
+            output = os.read(master, 0x1000).decode()
+            if output:
+                print(output, end="", flush=True)
+                full_output += output
+                if any(full_output.endswith(prompt) for prompt in interactive_prompts):
+                    yield process_stdin
+            else:
+                break
+        else:
+            raise TimeoutError()
+
+class Challenge:
+    pass
+
+class Level1(Challenge):
+    target_rax = 60  # SYS_exit
+
+    def check(self):
+        if len(sys.argv) == 2:
+            path = pathlib.Path(sys.argv[1])
+            if not (path.exists() and path.is_file()):
+                print("That's not a valid path, try again!")
+                print("If you are just starting, run the program without any arguments.")
+                sys.exit(1)
+
+            if path.stat().st_mode & 0o111 == 0:
+                print("That isn't an executable program, try again!")
+                sys.exit(1)
+
+            result = subprocess.run([str(path.absolute())], check=False)
+            if result.returncode < 0:
+                print("That program did not gracefully exit, try again!")
+                sys.exit(1)
+
+            flag = pathlib.Path("/flag").read_text()
+            print(f"\nCongratulations! Here is your flag: {flag}")
+            sys.exit(0)
+
+        render("level1/1-registers.md", target_rax=self.target_rax)
+        while True:
+            instruction_asm = input("Instruction: ")
+            match = re.match(r"^\s*(\w+)\s+(\w+)\s*,\s*(\w+)\s*$", instruction_asm)
+            if not match:
+                print("That instruction doesn't look quite right, try again!")
+                continue
+            op, dst, src = match.groups()
+            if op != "mov":
+                print(f"That instruction mnemonic ({op}) operation doesn't look quite right, try again!")
+                continue
+            if dst != "rax":
+                print(f"That instruction destination ({dst}) doesn't look quite right, try again!")
+                continue
+            try:
+                value = int(src, 16 if src.startswith("0x") else 10)
+                assert value == self.target_rax
+            except:
+                print(f"That instruct source value ({src}) doesn't look quite right, try again!")
+                continue
+            print("That's correct!")
+            break
+
+        render("level1/2-assembly.md", instruction_asm=instruction_asm)
+        while True:
+            cmd, result = shell_run()
+            if not pathlib.Path("program.s").is_file():
+                print("You didn't create a program.s file, try again!")
+                continue
+            program_lines = [line.strip() for line in open("program.s").read().splitlines() if line.strip()]
+            if ".intel_syntax noprefix" not in program_lines:
+                print("You didn't specify the intel syntax, try again!")
+                continue
+            if ".global _start" not in program_lines:
+                print("You didn't specify that the _start label should be global, try again!")
+                continue
+            if "_start:" not in program_lines:
+                print("You didn't specify the _start label, try again!")
+                continue
+            if instruction_asm not in program_lines:
+                print("You didn't specify the instruction, try again!")
+                continue
+            if any(";" in line for line in program_lines) or len(program_lines) != 4:
+                print("You didn't specify the program correctly, try again!")
+                continue
+            break
+
+        render("level1/3-assemble.md")
+        while True:
+            forced_shell_run("as -o program.o program.s", command_name="assembler")
+            if not pathlib.Path("program.o").is_file():
+                print("You didn't create a program.o file, try again!")
+                continue
+            break
+
+        render("level1/4-hexdump.md")
+        forced_shell_run("hexdump -C program.o", command_name="hexdump")
+
+        render("level1/5-objdump.md")
+        forced_shell_run("objdump -d -Mintel program.o", command_name="objdump")
+        print()
+        while True:
+            machine_code = input("Machine Code: ").strip()
+            if not re.match(r"^([0-9a-f]{2}\s+)*[0-9a-f]{2}$", machine_code):
+                print("That's not the correct format, try again!")
+                continue
+            if machine_code != f"48 c7 c0 {self.target_rax:02x} 00 00 00":
+                print("That's not correct, try again!")
+                continue
+            print("That's correct!")
+            break
+
+        render("level1/6-link.md")
+        while True:
+            forced_shell_run("ld -o program program.o", command_name="linker")
+            if not pathlib.Path("program").is_file():
+                print("You didn't create a program file, try again!")
+                continue
+            break
+        forced_shell_run("hexdump -C program", command_name="hexdump")
+        forced_shell_run("objdump -d -Mintel program", command_name="objdump")
+
+        render("level1/7-readelf.md")
+        forced_shell_run("readelf -h program", command_name="readelf")
+        print()
+        while True:
+            entrypoint = input("Entrypoint: ")
+            try:
+                entrypoint = int(entrypoint, 16 if entrypoint.startswith("0x") else 10)
+                assert entrypoint == 0x401000
+            except:
+                print("That's not correct, try again!")
+                continue
+            print("That's correct!")
+            break
+
+        render("level1/8-run.md")
+        forced_shell_run("./program", command_name="program")
+
+        render("level1/9-crashing.md", target_rax=self.target_rax)
+        while True:
+            cmd, result = shell_run()
+            print()
+            core_name = input("Core filename: ")
+            if "core" not in core_name or not pathlib.Path(core_name).is_file():
+                print("That core file doesn't exist, try again!")
+                continue
+            print("That's correct!")
+            break
+
+        render("level1/10-debug.md", target_rax=self.target_rax)
+        while True:
+            said = input("Say it: ")
+            if said != "I will debug this!":
+                print("That's not correct, try again!")
+                continue
+            print("That's correct!")
+            break
+
+        render("level1/11-gdb.md")
+        while True:
+            cmd = shell_prompt()
+            if cmd == "gdb -q program":
+                break
+            print("Please run the gdb command as specified, try again!")
+        forced_gdb_cmds = [
+            ("starti", "start the program"),
+            ("x/i $rip", "print the instruction the CPU is about to execute"),
+            ("p $rax", "print the initial value of RAX"),
+            ("si", "execute one instruction"),
+            ("p $rax", "print the new value of RAX"),
+            ("x/i $rip", "print the next instruction the CPU is about to execute"),
+            ("si", "execute one more instruction"),
+            ("quit", "quit gdb"),
+            ("y", "quit gdb")
+        ]
+        gdb_prompt = "(gdb) "
+        quit_prompt =  "Quit anyway? (y or n) "
+        for interaction, (forced_gdb_cmd, advice) in zip(interactive(cmd, (gdb_prompt, quit_prompt)), forced_gdb_cmds):
+            while True:
+                cmd = input()
+                if cmd == forced_gdb_cmd:
+                    break
+                print(f"Please {advice} as specified, try again!")
+                print(gdb_prompt, end="", flush=True)
+            interaction.write(f"{cmd}\n".encode())
+        print()
+        for when, correct_value in (("before", 0), ("after", self.target_rax)):
+            while True:
+                value = input(f"Value of RAX {when} executing the instruction: ")
+                try:
+                    value = int(value, 16 if value.startswith("0x") else 10)
+                    assert value == correct_value
+                except:
+                    print("That's not correct, try again!")
+                    continue
+                print("That's correct!")
+                break
+
+        render("level1/12-kernel.md", challenge_path=sys.argv[0])
+
+
+class Level2(Challenge):
+
+    def check(self):
+        render("level2/1-output.md")
+        print()
+        while True:
+            response = input("Linux resources are represented as: ")
+            if response not in ["file", "files"]:
+                print("That's not correct, try again!")
+                continue
+            print("That's correct!")
+            break
+
+        render("level2/2-processes.md")
+        print()
+        path_fd_0 = os.readlink("/proc/self/fd/0")
+        command_question_answers = [
+            ("first", "ls -l /proc/self/exe", "The path to the executable for that process: ", "/usr/bin/ls"),
+            ("second", "cat /proc/self/maps", "The path associated with the first memory region listed: ", "/usr/bin/cat"),
+            ("third", "ls -l /proc/self/fd", "The path associated with the first file listed: ", path_fd_0),
+        ]
+        for nth, command, question, answer in command_question_answers:
+            cmd, result = forced_shell_run(command, command_name=nth)
+            while True:
+                response = input(question)
+                if response != answer:
+                    print("That's not correct, try again!")
+                    continue
+                print("That's correct!")
+                break
+
+        render("level2/3-files.md")
+
+Level1().check()

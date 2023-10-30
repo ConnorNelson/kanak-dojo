@@ -1,0 +1,27 @@
+# Introduction to x86-64 Assembly: Registers
+
+Inside the x86-64 processor architecture, there are specific storage locations known as "registers". These registers store data for quick access during processing.
+
+Key registers in x86-64 include:
+
+1. **RAX, RBX, RCX, RDX, RDI, RSI, R8, R9, R10**: General-purpose registers used for various tasks, including storing temporary data. These registers are 64 bits wide, meaning they can store 64 bits of data at a time. Don't worry about the names of these registers for now. We'll cover them in more detail later.
+
+2. **RIP**: The instruction pointer, also known as the program counter. RIP holds the location, or address, of the next instruction that the processor will execute. As instructions are processed, RIP is updated to point to the subsequent instruction.
+
+To demonstrate, let's place a value into one of these registers:
+
+```assembly
+mov rax, 5
+```
+
+Here, we're instructing the computer to store the value 5 in the RAX register.
+
+Now, let's see how to "move" (or more accurately, copy) the value from one register to another:
+
+```assembly
+mov rbx, rax
+```
+
+This instruction copies the value from the RAX register to the RBX register. It's essential to note that the value in RAX remains unchanged; we've merely created a copy in RBX.
+
+Now craft the instruction which stores the value {{ target_rax }} into the RAX register.
