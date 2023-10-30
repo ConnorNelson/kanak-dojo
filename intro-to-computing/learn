@@ -113,7 +113,7 @@ class Level1(Challenge):
                 print("That isn't an executable program, try again!")
                 sys.exit(1)
 
-            if path.stat().st_uid == os.getuid():
+            if path.stat().st_uid != os.getuid():
                 print("That program isn't yours, try again!")
                 sys.exit(1)
 
