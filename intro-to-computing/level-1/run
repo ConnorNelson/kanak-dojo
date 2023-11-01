@@ -5,6 +5,7 @@ import pathlib
 import re
 import sys
 
+sys.path.insert(0, "/challenge/.lib")
 from liblearn import render, run, shell_run, forced_shell_run, interactive, shell_prompt
 
 
@@ -34,7 +35,7 @@ if len(sys.argv) == 2:
     print(f"\nCongratulations! Here is your flag: {flag}")
     sys.exit(0)
 
-render("level1/1-registers.md", target_rax=SYS_exit)
+render("1-registers.md", target_rax=SYS_exit)
 while True:
     instruction_asm = input("Instruction: ")
     match = re.match(r"^\s*(\w+)\s+(\w+)\s*,\s*(\w+)\s*$", instruction_asm)
@@ -57,7 +58,7 @@ while True:
     print("That's correct!")
     break
 
-render("level1/2-assembly.md", instruction_asm=instruction_asm)
+render("2-assembly.md", instruction_asm=instruction_asm)
 while True:
     command, result = shell_run()
     if not pathlib.Path("program.s").is_file():
@@ -81,7 +82,7 @@ while True:
         continue
     break
 
-render("level1/3-assemble.md")
+render("3-assemble.md")
 while True:
     forced_shell_run("as -o program.o program.s", command_name="assembler")
     if not pathlib.Path("program.o").is_file():
@@ -89,10 +90,10 @@ while True:
         continue
     break
 
-render("level1/4-hexdump.md")
+render("4-hexdump.md")
 forced_shell_run("hexdump -C program.o", command_name="hexdump")
 
-render("level1/5-objdump.md")
+render("5-objdump.md")
 forced_shell_run("objdump -d -Mintel program.o", command_name="objdump")
 print()
 while True:
@@ -106,7 +107,7 @@ while True:
     print("That's correct!")
     break
 
-render("level1/6-link.md")
+render("6-link.md")
 while True:
     forced_shell_run("ld -o program program.o", command_name="linker")
     if not pathlib.Path("program").is_file():
@@ -116,7 +117,7 @@ while True:
 forced_shell_run("hexdump -C program", command_name="hexdump")
 forced_shell_run("objdump -d -Mintel program", command_name="objdump")
 
-render("level1/7-readelf.md")
+render("7-readelf.md")
 forced_shell_run("readelf -h program", command_name="readelf")
 print()
 while True:
@@ -130,10 +131,10 @@ while True:
     print("That's correct!")
     break
 
-render("level1/8-run.md")
+render("8-run.md")
 forced_shell_run("./program", command_name="program")
 
-render("level1/9-crashing.md", target_rax=SYS_exit)
+render("9-crashing.md", target_rax=SYS_exit)
 while True:
     command, result = shell_run()
     print()
@@ -144,7 +145,7 @@ while True:
     print("That's correct!")
     break
 
-render("level1/10-debug.md", target_rax=SYS_exit)
+render("10-debug.md", target_rax=SYS_exit)
 while True:
     said = input("Say it: ")
     if said != "I will debug this!":
@@ -153,7 +154,7 @@ while True:
     print("That's correct!")
     break
 
-render("level1/11-gdb.md")
+render("11-gdb.md")
 while True:
     command = shell_prompt()
     if command == "gdb -q program":
@@ -193,4 +194,4 @@ for when, correct_value in (("before", 0), ("after", SYS_exit)):
         print("That's correct!")
         break
 
-render("level1/12-kernel.md", challenge_path=sys.argv[0])
+render("12-kernel.md", challenge_path=sys.argv[0])

@@ -1,10 +1,13 @@
 #!/opt/pwn.college/python
 
 import os
+import sys
 
+sys.path.insert(0, "/challenge/.lib")
 from liblearn import render, forced_shell_run
 
-render("level2/1-output.md")
+
+render("1-output.md")
 print()
 while True:
     response = input("Linux resources are represented as: ")
@@ -14,7 +17,7 @@ while True:
     print("That's correct!")
     break
 
-render("level2/2-processes.md")
+render("2-processes.md")
 print()
 path_fd_0 = os.readlink("/proc/self/fd/0")
 command_question_answers = [
@@ -32,4 +35,4 @@ for nth, command, question, answer in command_question_answers:
         print("That's correct!")
         break
 
-render("level2/3-files.md")
+render("3-files.md")
