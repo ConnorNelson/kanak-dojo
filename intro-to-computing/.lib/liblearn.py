@@ -26,6 +26,12 @@ env = Environment(loader=FileSystemLoader(info_path))
 libc = ctypes.CDLL("libc.so.6")
 pidfd_open = lambda pid, flags: libc.syscall(434, pid, flags)
 
+user_environment = None
+if os.getenv("TERM_PROGRAM") == "vscode":
+    user_environment = "vscode"
+if os.getenv("SESSION_MANAGER"):
+    user_environment = "desktop"
+
 def drop_privileges():
     os.seteuid(os.getuid())
     os.setegid(os.getgid())

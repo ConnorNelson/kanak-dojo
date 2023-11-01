@@ -6,7 +6,7 @@ Key registers in x86-64 include:
 
 1. **RAX, RBX, RCX, RDX, RDI, RSI, R8, R9, R10**: General-purpose registers used for various tasks, including storing temporary data. These registers are 64 bits wide, meaning they can store 64 bits of data at a time. Don't worry about the names of these registers for now. We'll cover them in more detail later.
 
-2. **RIP**: The instruction pointer, also known as the program counter. RIP holds the location, or address, of the next instruction that the processor will execute. As instructions are processed, RIP is updated to point to the subsequent instruction.
+2. **RIP**: The instruction pointer, also known as the program counter. RIP holds the location, or address, of the next instruction that the processor will execute. As instructions are processed, RIP is updated to point to the subsequent instruction. This is also stored as a 64-bit value.
 
 To demonstrate, let's place a value into one of these registers:
 

@@ -26,10 +26,21 @@ What we've written is simply a human-readable representation of machine code. Th
 
 Now, it's time for you to write this complete assembly program out to a file. The standard file extension for assembly files is `.s`, so let's call this file `program.s`.
 
-Use your favorite text editor to create and edit the file `program.s`. Not sure which one to use? `vim`, `emacs`, `nano`, and `VS Code` are all good, popular options. If you're not sure how to use any of these, give `nano` a try: you can use `Ctrl+O` to save, `Ctrl+X` to exit, and `Ctrl+G` to get help. You can launch it with:
+Use your favorite text editor to create and edit the file `program.s`. Not sure which one to use? `vim`, `emacs`, `nano`, `VSCode`, and `gedit` are all good, popular options.
+
+{% if user_environment == "vscode" %}
+You can edit the file in VSCode by running the following command in the terminal:
+
+```sh
+$ code-server program.s
+```
+
+{% else %}
+If you're not sure how to use any of these, give `nano` a try: you can use `Ctrl+O` to save, `Ctrl+X` to exit, and `Ctrl+G` to get help. You can launch it with:
 
 ```sh
 $ nano program.s
 ```
+{% endif %}
 
 You might want to copy the code snippet up above before you launch up your text editor!
