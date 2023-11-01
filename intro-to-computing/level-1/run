@@ -53,7 +53,7 @@ while True:
         value = int(src, 16 if src.startswith("0x") else 10)
         assert value == SYS_exit
     except:
-        print(f"That instruct source value ({src}) doesn't look quite right, try again!")
+        print(f"That instruction source value ({src}) doesn't look quite right, try again!")
         continue
     print("That's correct!")
     break

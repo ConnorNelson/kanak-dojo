@@ -26,11 +26,6 @@ env = Environment(loader=FileSystemLoader(info_path))
 libc = ctypes.CDLL("libc.so.6")
 pidfd_open = lambda pid, flags: libc.syscall(434, pid, flags)
 
-
-def render(template, **kwargs):
-    text = env.get_template(template).render(**kwargs)
-    subprocess.run(["/usr/bin/glow"], input=text.encode(), check=True)
-
 def drop_privileges():
     os.seteuid(os.getuid())
     os.setegid(os.getgid())
@@ -38,6 +33,10 @@ def drop_privileges():
 def run(command, **kwargs):
     kwargs["preexec_fn"] = drop_privileges
     return subprocess.run(command, **kwargs)
+
+def render(template, **kwargs):
+    text = env.get_template(template).render(**kwargs)
+    run(["/usr/bin/glow"], input=text.encode(), check=True)
 
 def shell_prompt():
     user = "hacker"
