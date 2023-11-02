@@ -27,6 +27,8 @@ if len(sys.argv) == 2:
         sys.exit(1)
 
     result = run([str(path.absolute())])
+    print(f"The program exited with code {result.returncode}")
+
     if result.returncode < 0:
         print("That program did not gracefully exit, try again!")
         sys.exit(1)
