@@ -22,7 +22,7 @@ Let's break down the extra stuff that we've added before your instruction:
 
 You might be thinking, why do we need all of this other garbage? Why can't we just run some assembly instructions?!
 
-What we've written is simply a human-readable representation of machine code. The assembler, which we are about to use, will convert our assembly code into machine code for us. This extra stuff is just some metadata for the assembler program we're going to use, to give it necessary context about what we're trying to do. Be happy you aren't writing a stream of bits by hand! But guess what, if you don't like this workflow, you will soon be able to write a program of your own—that does what **you** want—maybe the *add-three-lame-lines-to-the-start* program; let the computer work for you!
+What we've written is simply a human-readable representation of machine code. The assembler, which we are about to use, will convert our assembly code into machine code for us. This extra stuff is just some metadata for the assembler program we're going to use, to give it necessary context about what we're trying to do. Be happy you aren't writing a stream of bits by hand! But guess what, if you don't like this workflow, you will soon be able to write a program of your own--that does what **you** want--maybe the *add-three-lame-lines-to-the-start* program; let the computer work for you!
 
 Now, it's time for you to write this complete assembly program out to a file. The standard file extension for assembly files is `.s`, so let's call this file `program.s`.
 
