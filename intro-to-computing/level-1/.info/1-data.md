@@ -20,4 +20,4 @@ Now, to make sure we're on the same page, let's look at some bits. Here are 8 bi
 00111100
 ```
 
-Figure out what these bits mean, and then write the corresponding number in decimal and hexadecimal. Then figure out what the corresponding ASCII character is. An ASCII table might be helpful!
+Figure out what these bits mean. Represent them as a decimal number, a hexadecimal number, and an ASCII character. You might want to find an ASCII table to help you out!
