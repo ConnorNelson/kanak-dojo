@@ -41,6 +41,6 @@ If you're not sure how to use any of these, give `nano` a try: you can use `Ctrl
 ```sh
 $ nano program.s
 ```
-{% endif %}
 
 You might want to copy the code snippet up above before you launch up your text editor!
+{% endif %}
