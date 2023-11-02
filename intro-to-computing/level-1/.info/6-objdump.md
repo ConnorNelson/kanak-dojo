@@ -14,6 +14,4 @@ The `-d` flag here tells `objdump` to disassemble the object file, and the `-Min
 
 You'll notice that the output contains our very first assembly instruction, along with the `_start` label we defined. In addition to seeing the machine code represented back in assembly format, we can also see the bytes that make up the machine code represented in hexadecimal format. If you look carefully, you'll see those same bytes in the hexdump output at location `00000040`!
 
-Don't worry that the value being moved into RAX is in hexadecimal format, it's just another perspective on the same value: 0x3c is 60! Start getting comfortable with hexadecimal, a lot of tools use it to represent bytes. It's convenient because it's an easy way to represent bits, without needing to use a lot of characters (2 characters to represent all 256 values instead of 8 characters, 16^2 vs 2^8). And often, as you'll exerperience with time, you'll find that you'll be able to recognize certain bit patterns in hexadecimal, which is very useful. Before you know it, you'll be weirded out when you see a byte represented in decimal!
-
 After you run `objdump`, figure out what the bytes of machine code are that make up your instruction. Please enter them as space-separated hex values, e.g. `00 01 02 03`.
