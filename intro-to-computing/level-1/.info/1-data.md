@@ -1,6 +1,4 @@
-# Computation and Data
-
-At the most basic level, a computer is a machine that can perform computation. Computation is a process that takes some input and produces some output. For example, a calculator is a simple computer that takes some numbers and operators as input and produces a number as output. Modern computers are much more complex, but they are still fundamentally just machines that perform computation.
+# Data: Bits and Bytes
 
 Data is stored as bits, which are the smallest unit of data in a computer. A single bit can be thought of as either a 0 or a 1. In physics, it's a lot simpler to represent on and off states (using voltage), compared to something like on, less on, even less on, kinda sorta on, and so on (10 distinct values) to represent "normal" (decimal) numbers.
 

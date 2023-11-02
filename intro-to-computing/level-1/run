@@ -44,6 +44,7 @@ while True:
     except:
         print("That's not correct, try again!")
         continue
+    print("That's correct!")
     break
 while True:
     value = input("Hexadecimal Value: ").strip()
@@ -53,6 +54,7 @@ while True:
     except:
         print("That's not correct, try again!")
         continue
+    print("That's correct!")
     break
 while True:
     value = input("ASCII Value: ").strip()
@@ -61,6 +63,7 @@ while True:
     except:
         print("That's not correct, try again!")
         continue
+    print("That's correct!")
     break
 
 render("2-registers.md", target_rax=SYS_exit)

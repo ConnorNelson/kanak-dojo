@@ -1,6 +1,6 @@
-# Introduction to x86-64 Assembly: Registers
+# Registers in x86-64
 
-Inside the x86-64 processor architecture, there are specific storage locations known as "registers". These registers store data for quick access during processing.
+Now that we've learned about bits and bytes, let's learn about how that data interacts with the processor. We will be using the x86-64 processor architecture, which is the architecture used by many modern computers. Inside the x86-64 processor architecture, there are specific storage locations known as "registers". These registers store data for quick access during processing.
 
 Key registers in x86-64 include:
 
@@ -14,7 +14,7 @@ To demonstrate, let's place a value into one of these registers:
 mov rax, 5
 ```
 
-Here, we're instructing the computer to store the value 5 in the RAX register.
+Here, we're instructing the processor to store the value 5 into the RAX register.
 
 Now, let's see how to "move" (or more accurately, copy) the value from one register to another:
 
@@ -22,6 +22,6 @@ Now, let's see how to "move" (or more accurately, copy) the value from one regis
 mov rbx, rax
 ```
 
-This instruction copies the value from the RAX register to the RBX register. It's essential to note that the value in RAX remains unchanged; we've merely created a copy in RBX.
+This instruction copies the value from the RAX register to the RBX register. It's essential to note that the value in RAX remains unchanged; we've simply created a copy in RBX.
 
 Now craft the instruction which stores the value {{ target_rax }} into the RAX register.
