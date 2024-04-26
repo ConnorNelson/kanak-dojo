@@ -31,3 +31,4 @@ pages:
   - static-page
   - dynamic-page
   - dynamic-page-symlink
+  - python_reference.pdf
