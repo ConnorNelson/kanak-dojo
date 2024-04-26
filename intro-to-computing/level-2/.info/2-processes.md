@@ -1,6 +1,8 @@
 # Processes
 
-You've already written a program that can *exit*, but exactly is the "it" that exits? This thing which starts, runs, and exits is called a **process**. A process is a running instance of a program. When you run a program, the kernel creates a *process* to run that program. When your program exits, the kernel destroys the process. The process is a resource that the kernel manages, and in turn, it has a collection of resources and attributes associated with it:
+You've already written a program that can *exit*, but exactly is "it" that exits? This thing which starts, runs, and exits is called a **process**. A process is a running instance of a program. When you run a program, the kernel creates a *process* to run that program. When your program exits, the kernel destroys the process. There could be several independent running instances--processes--of the same exact program.
+
+The process is a resource that the kernel manages, and in turn, it has a collection of resources and attributes associated with it:
 - PID: the process has a unique ID, which is used to identify it.
 - CPU: the process has its own CPU state, including the general purpose registers and RIP.
 - Memory: the process has its own memory space, which is isolated from other processes. We'll explore this in more detail later.
@@ -12,7 +14,7 @@ Remember how we said that the process is a resource, and on Linux, resources are
 
 Check out some of them with the following commands:
 - `ls -l /proc/self/exe`: This is a symbolic link which points to the executable that started the process.
-- `cat /proc/self/status`: This file contains a bunch of information about the process, including the PID, the CPU state, the memory usage, and more.
+- `cat /proc/self/maps`: This file contains all of the memory mappings for the process.
 - `ls -l /proc/self/fd`: This is a directory that contains a bunch of symbolic links to the files that are open in the process. You can see that the standard input, output, and error streams are open, as well as the process file itself.
 
 Go ahead and run these commands!
