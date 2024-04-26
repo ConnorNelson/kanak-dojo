@@ -27,3 +27,8 @@ modules:
     challenges:
       - id: custom
         name: custom
+
+pages:
+  - static-page
+  - dynamic-page
+  - dynamic-page-symlink
