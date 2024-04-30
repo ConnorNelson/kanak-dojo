@@ -26,6 +26,10 @@ modules:
     challenges:
       - id: custom
         name: custom
+  
+  - id: web-app
+    challenges:
+      - id: level-1
 
 pages:
   - static-page
