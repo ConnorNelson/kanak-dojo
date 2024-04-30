@@ -34,7 +34,7 @@ def hello():
         </style>
         <script>
             function fetchData() {
-                fetch('/get_data')
+                fetch('/workspace/challenge/get_data')
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('data-container').innerHTML = data['message'];
