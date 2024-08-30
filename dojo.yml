@@ -7,6 +7,10 @@ description: |
   <script>alert(1)</script>
 
 modules:
+  - id: hello
+    challenges:
+      - id: world
+
   - id: intro-to-computing
     name: Intro to Computing
 
