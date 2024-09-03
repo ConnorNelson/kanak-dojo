@@ -1,4 +1,4 @@
 #!/bin/sh
 
-su hacker -c '/run/dojo/bin/dojo-desktop && cp /bin/false /tmp && DISPLAY=:0 ida64 /tmp/false'
+su hacker -c '/run/workspace/bin/dojo-desktop && cp /bin/false /tmp && DISPLAY=:0 ida64 /tmp/false &'
 
