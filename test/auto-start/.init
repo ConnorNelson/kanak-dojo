@@ -3,8 +3,9 @@
 touch /run/dojo/var/ready
 
 su hacker -c '
-export PATH=/run/challenge/bin:/run/workspace/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-export SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt
+export PATH="/run/workspace/bin:$PATH"
 export DISPLAY=:0
 dojo-desktop
-(sleep 5 && cp /bin/false /tmp && ida64 /tmp/false) &'
+cp /bin/false /tmp
+ida64 /tmp/false &
+'
