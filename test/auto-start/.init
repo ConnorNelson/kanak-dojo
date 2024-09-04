@@ -1,4 +1,7 @@
 #!/bin/sh
 
-su hacker -c '/run/workspace/bin/dojo-desktop && cp /bin/false /tmp && DISPLAY=:0 ida64 /tmp/false &'
+env > /tmp/env
+id > /tmp/id
+
+su hacker -c '/run/workspace/bin/dojo-desktop && (sleep 5 && cp /bin/false /tmp && DISPLAY=:0 /run/workspace/bin/ida64 /tmp/false) &'
 
