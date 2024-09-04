@@ -3,5 +3,7 @@
 env > /tmp/env
 id > /tmp/id
 
-su hacker -c '/run/workspace/bin/dojo-desktop && (sleep 5 && cp /bin/false /tmp && DISPLAY=:0 /run/workspace/bin/ida64 /tmp/false) &'
+su hacker -c 'export PATH=/run/challenge/bin:/run/workspace/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+/run/workspace/bin/dojo-desktop
+(sleep 5 && cp /bin/false /tmp && DISPLAY=:0 /run/workspace/bin/ida64 /tmp/false) &'
 
