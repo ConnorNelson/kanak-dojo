@@ -39,6 +39,10 @@ modules:
     challenges:
       - id: auto-start
 
+  - id: demo
+    challenges:
+      - id: rev-1
+
 pages:
   - static-page
   - dynamic-page
