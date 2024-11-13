@@ -1,5 +1,5 @@
 #!/bin/sh
 
-/usr/bin/gcc /challenge/rev1.c -O2 -o /challenge/demo
+/usr/bin/gcc /challenge/rev1.c -Os -o /challenge/demo
 chmod 4755 /challenge/demo
 mv /challenge/rev1.c /tmp/rev1.c
