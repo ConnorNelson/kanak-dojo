@@ -25,7 +25,7 @@ modules:
   - id: custom
     name: custom
 
-    image: test-custom
+    image: ghcr.io/galoisinc/cryptol:3.2.0
 
     challenges:
       - id: custom
