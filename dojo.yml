@@ -30,6 +30,8 @@ modules:
     challenges:
       - id: custom
         name: custom
+      - id: ubuntu
+        image: ubuntu:24.04
 
   - id: web-app
     challenges:
