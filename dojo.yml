@@ -11,6 +11,11 @@ modules:
     challenges:
       - id: world
 
+  - id: lecture
+    image: pwncollege/challenge-flask
+    challenges:
+      - id: lecture
+
   - id: intro-to-computing
     name: Intro to Computing
 
@@ -24,8 +29,6 @@ modules:
 
   - id: custom
     name: custom
-
-    image: ghcr.io/galoisinc/cryptol:3.2.0
 
     challenges:
       - id: custom
