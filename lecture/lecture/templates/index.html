@@ -10,8 +10,26 @@
             margin: 0;
         }
     </style>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="{{ url_for('static', filename='js/lecture.js') }}"></script>
 </head>
 <body>
+    <div id="player"></div>
+    <script>
+        function onYouTubeIframeAPIReady() {
+            console.log("onYouTubeIframeAPIReady");
+            new YT.Player("player", {
+                videoId: "{{ youtube_id }}",
+                playerVars: {
+                    controls: 0,
+                },
+                events: {
+                    onReady: onPlayerReady,
+                }
+            });
+        }
+    </script>
     <iframe width="100%" height="100%" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 </body>
 </html>
