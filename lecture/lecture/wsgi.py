@@ -33,7 +33,7 @@ def lecture(youtube_id):
     return render_template("lecture.html", youtube_id=youtube_id)
 
 
-@app.route("/<youtube_id>/telemetry", methods=["POST"])
+@app.route("/<youtube_id>/telemetry", methods=["GET", "POST"])
 def update_telemetry(youtube_id):
     fields = {
         "reason": str,
@@ -49,6 +49,7 @@ def update_telemetry(youtube_id):
                     return {"error": f"Missing required data"}, 400
     event = request.json.copy()
     event["player"]["state"] = YTPlayerState(event["player"]["state"])
+    event["youtube_id"] = youtube_id
     event["timestamp"] = datetime.datetime.now()
     timeline.append(event)
 
