@@ -15,14 +15,23 @@ flag = open("/flag").read().strip()
 youtube_id, total_time = open("/challenge/.config").read().strip().split()
 total_time = int(total_time)
 
-timeline = []
 
-local_share_dir = Path("/home/hacker/.local/share/")
-local_share_dir.mkdir(parents=True, exist_ok=True)
-os.chown(local_share_dir, 1000, 1000)
-timeline_path = local_share_dir / "lectures" / f"{youtube_id}.gz"
-timeline_path.parent.mkdir(parents=True, exist_ok=True)
-timeline_file = gzip.open(timeline_path, "ab")
+def open_timeline_file():
+    local_share_dir = Path("/home/hacker/.local/share/")
+    local_share_dir.mkdir(parents=True, exist_ok=True)
+    os.chown(local_share_dir, 1000, 1000)
+    timeline_path = local_share_dir / "lectures" / f"{youtube_id}.gz"
+    timeline_path.parent.mkdir(parents=True, exist_ok=True)
+    existing_data = gzip.open(timeline_path, "rb").read() if timeline_path.exists() else b""
+    timeline_file = gzip.open(timeline_path, "ab")
+    if existing_data:
+        timeline_file.write(existing_data)
+        timeline_file.flush()
+    return timeline_file
+
+
+timeline = []
+timeline_file = open_timeline_file()
 
 
 @app.route("/")
