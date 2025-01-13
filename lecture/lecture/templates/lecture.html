@@ -130,7 +130,7 @@
         }
 
         function telemetry(reason) {
-            fetch("telemetry", {
+            return fetch("telemetry", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -207,18 +207,19 @@
         }
 
         function onPlayerStateChange(event) {
-            telemetry("player-state-change");
+            telemetry("player-state-change").then(() => {
+                if (flag && event.data === YT.PlayerState.ENDED) {
+                    const flagModal = document.getElementById("flag-modal");
+                    const flagText = document.getElementById("flag-text");
+                    flagText.textContent = flag;
+                    flagModal.showModal();
+                }
+            });
             switch (event.data) {
                 case YT.PlayerState.UNSTARTED:
                     color = "grey";
                     break;
                 case YT.PlayerState.ENDED:
-                    if (flag) {
-                        const flagModal = document.getElementById("flag-modal");
-                        const flagText = document.getElementById("flag-text");
-                        flagText.textContent = flag;
-                        flagModal.showModal();
-                    }
                     color = "green";
                     break;
                 case YT.PlayerState.PLAYING:
