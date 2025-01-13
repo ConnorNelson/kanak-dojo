@@ -24,7 +24,7 @@ def open_timeline_file():
     timeline_path.parent.mkdir(parents=True, exist_ok=True)
     existing_data = []
     try:
-        for line in timeline_path.open("rb"):
+        for line in gzip.open(timeline_path, "rb"):
             existing_data.append(line)
     except EOFError:
         pass
