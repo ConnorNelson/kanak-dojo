@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 
-import datetime
-from enum import Enum
+import json
+import os
+import time
+from pathlib import Path
 
 from flask import Flask, redirect, render_template, request, url_for
 
 
-class YTPlayerState(Enum):
-    UNSTARTED = -1
-    ENDED = 0
-    PLAYING = 1
-    PAUSED = 2
-    BUFFERING = 3
-    CUED = 5
-
-
 app = Flask(__name__)
 
-flag = "flag{this_is_a_fake_flag}"
-youtube_id = "AKTYVWCi6ss"
-total_time = datetime.timedelta(minutes=13, seconds=39)
+flag = open("/flag").read().strip()
+youtube_id, total_time = open("/challenge/.config").read().strip().split()
+total_time = int(total_time)
+
 timeline = []
+
+local_share_dir = Path("/home/hacker/.local/share/")
+local_share_dir.mkdir(parents=True, exist_ok=True)
+os.chown(local_share_dir, 1000, 1000)
+timeline_path = local_share_dir / "lectures" / f"{youtube_id}.jsonl"
+timeline_path.parent.mkdir(parents=True, exist_ok=True)
 
 
 @app.route("/")
@@ -48,17 +48,17 @@ def update_telemetry(youtube_id):
                 if sub_field not in request.json[field]:
                     return {"error": f"Missing required data"}, 400
     event = request.json.copy()
-    event["player"]["state"] = YTPlayerState(event["player"]["state"])
     event["youtube_id"] = youtube_id
-    event["timestamp"] = datetime.datetime.now()
+    event["timestamp"] = time.time()
     timeline.append(event)
+    timeline_path.open("a").write(json.dumps(event) + "\n")
 
     result = {}
 
     valid_coverage, invalid_coverage = resolve_timeline_coverage(timeline)
     result["coverage"] = {"valid": valid_coverage, "invalid": invalid_coverage}
 
-    completed = sum(end - start for start, end in valid_coverage) > total_time.total_seconds() - 5
+    completed = sum(end - start for start, end in valid_coverage) > total_time - 5
     if completed:
         result["flag"] = flag
 
@@ -79,7 +79,7 @@ def resolve_timeline_coverage(timeline):
         elapsed_time = event["player"]["time"] - last_time
         elapsed_timestamp = event["timestamp"] - last_timestamp
 
-        if elapsed_timestamp.total_seconds() * 2 + 2 > elapsed_time > 0:
+        if elapsed_timestamp * 2 + 2 > elapsed_time > 0:
             valid_coverage.append((last_time, event["player"]["time"]))
         elif elapsed_time > 0:
             invalid_coverage.append((last_time, event["player"]["time"]))
