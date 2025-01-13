@@ -20,7 +20,7 @@ timeline = []
 local_share_dir = Path("/home/hacker/.local/share/")
 local_share_dir.mkdir(parents=True, exist_ok=True)
 os.chown(local_share_dir, 1000, 1000)
-timeline_path = local_share_dir / "lectures" / f"{youtube_id}.jsonl"
+timeline_path = local_share_dir / "lectures" / f"{youtube_id}.zlib"
 timeline_path.parent.mkdir(parents=True, exist_ok=True)
 timeline_file = timeline_path.open("ab")
 timeline_compressor = zlib.compressobj()
@@ -54,7 +54,8 @@ def update_telemetry(youtube_id):
     event["youtube_id"] = youtube_id
     event["timestamp"] = time.time()
     timeline.append(event)
-    timeline_file.write(timeline_compressor.compress(json.dumps(event).encode() + b"\n"))
+    timeline_file.write(timeline_compressor.compress(json.dumps(event).encode() + b"\n") +
+                        timeline_compressor.flush(zlib.Z_SYNC_FLUSH))
     timeline_file.flush()
 
     result = {}
