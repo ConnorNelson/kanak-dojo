@@ -6,7 +6,7 @@ import os
 import time
 from pathlib import Path
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request
 
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ timeline_file = gzip.open(timeline_path, "ab")
 
 @app.route("/")
 def index():
-    return redirect(url_for("lecture", youtube_id=youtube_id))
+    return redirect(f"{youtube_id}/")
 
 
 @app.route("/<youtube_id>/")
