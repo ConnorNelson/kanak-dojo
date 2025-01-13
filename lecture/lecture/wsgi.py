@@ -22,7 +22,7 @@ local_share_dir.mkdir(parents=True, exist_ok=True)
 os.chown(local_share_dir, 1000, 1000)
 timeline_path = local_share_dir / "lectures" / f"{youtube_id}.jsonl"
 timeline_path.parent.mkdir(parents=True, exist_ok=True)
-timeline_file = timeline_path.open("a")
+timeline_file = timeline_path.open("ab")
 timeline_compressor = zlib.compressobj()
 
 
