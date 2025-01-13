@@ -26,7 +26,7 @@ def open_timeline_file():
     try:
         for line in gzip.open(timeline_path, "rb"):
             existing_data.append(line)
-    except EOFError:
+    except (FileNotFoundError, EOFError):
         pass
     timeline_file = gzip.open(timeline_path, "wb")
     if existing_data:
