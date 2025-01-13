@@ -4,6 +4,7 @@ import json
 import os
 import time
 from pathlib import Path
+import zlib
 
 from flask import Flask, redirect, render_template, request, url_for
 
@@ -21,6 +22,8 @@ local_share_dir.mkdir(parents=True, exist_ok=True)
 os.chown(local_share_dir, 1000, 1000)
 timeline_path = local_share_dir / "lectures" / f"{youtube_id}.jsonl"
 timeline_path.parent.mkdir(parents=True, exist_ok=True)
+timeline_file = timeline_path.open("a")
+timeline_compressor = zlib.compressobj()
 
 
 @app.route("/")
@@ -51,7 +54,8 @@ def update_telemetry(youtube_id):
     event["youtube_id"] = youtube_id
     event["timestamp"] = time.time()
     timeline.append(event)
-    timeline_path.open("a").write(json.dumps(event) + "\n")
+    timeline_file.write(timeline_compressor.compress(json.dumps(event).encode() + "\n"))
+    timeline_file.flush()
 
     result = {}
 
