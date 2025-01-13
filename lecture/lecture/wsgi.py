@@ -22,10 +22,15 @@ def open_timeline_file():
     os.chown(local_share_dir, 1000, 1000)
     timeline_path = local_share_dir / "lectures" / f"{youtube_id}.gz"
     timeline_path.parent.mkdir(parents=True, exist_ok=True)
-    existing_data = gzip.open(timeline_path, "rb").read() if timeline_path.exists() else b""
-    timeline_file = gzip.open(timeline_path, "ab")
+    existing_data = []
+    try:
+        for line in timeline_path.open("rb"):
+            existing_data.append(line)
+    except EOFError:
+        pass
+    timeline_file = gzip.open(timeline_path, "wb")
     if existing_data:
-        timeline_file.write(existing_data)
+        timeline_file.writelines(existing_data)
         timeline_file.flush()
     return timeline_file
 
