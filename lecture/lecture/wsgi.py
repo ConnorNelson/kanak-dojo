@@ -54,7 +54,7 @@ def update_telemetry(youtube_id):
     event["youtube_id"] = youtube_id
     event["timestamp"] = time.time()
     timeline.append(event)
-    timeline_file.write(timeline_compressor.compress(json.dumps(event).encode() + "\n"))
+    timeline_file.write(timeline_compressor.compress(json.dumps(event).encode() + b"\n"))
     timeline_file.flush()
 
     result = {}
