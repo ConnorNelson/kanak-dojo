@@ -11,10 +11,52 @@ modules:
     challenges:
       - id: world
 
-  - id: lecture
-    image: pwncollege/challenge-flask
+  - id: test-talking-web
     challenges:
-      - id: lecture
+      - import:
+          dojo: archive
+          module: talking-web
+          challenge: http-python
+      - import:
+          dojo: fundamentals
+          module: talking-web
+          challenge: http-host-python
+      - import:
+          dojo: fundamentals
+          module: talking-web
+          challenge: http-path-python
+      - import:
+          dojo: archive
+          module: talking-web
+          challenge: url-encoding-python
+      - import:
+          dojo: archive
+          module: talking-web
+          challenge: http-get-arguments-python
+      - import:
+          dojo: archive
+          module: talking-web
+          challenge: http-get-multiarg-python
+      - import:
+          dojo: fundamentals
+          module: talking-web
+          challenge: http-form-python
+      - import:
+          dojo: archive
+          module: talking-web
+          challenge: http-json-python
+      - import:
+          dojo: archive
+          module: talking-web
+          challenge: http-json-complex-python
+      - import:
+          dojo: fundamentals
+          module: talking-web
+          challenge: http-redirect-python
+      - import:
+          dojo: fundamentals
+          module: talking-web
+          challenge: http-cookies-python
 
   - id: intro-to-computing
     name: Intro to Computing
